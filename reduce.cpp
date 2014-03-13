@@ -1,13 +1,24 @@
 #include <iostream>
 
+#define N 4
+
 using namespace std;
 
-int origin_data[4][4] = {1, 0, 1, 1,
+int origin_data[N][N] = {1, 0, 1, 1,
                          -1, 1, 0, -1,
                          1, 0, -1, 1,
                          0, 0, 1, -1};
-int col_num = 4;
-int row_num = 4;
+int res_data[N][N];
+int col_num = N;
+int row_num = N;
+
+void res_to_origin() {
+    for (int p = 0; p < N; p++) {
+        for (int q = 0; q < N; q++) {
+            origin_data[p][q] = res_data[p][q];
+        }
+    }
+}
 
 bool reduce() {
     if (col_num == 1 || row_num == 1)
@@ -36,19 +47,52 @@ bool reduce() {
     if (col_ptr < 0)
         return false;
 
+    cout << "col_ptr:" << col_ptr << endl;
+
+    int res_row_ptr = 0;
     for (int p = 0; p < row_num; p++) {
-        for (int q = row_num + 1; q < row_num; q++) {
-            if (origin_data[p][col_ptr] * origin_data[q][col_ptr] < 0) {
+        if (origin_data[p][col_ptr] == 0) {
+            for (int q = 0; q < col_num; q++) {
+                res_data[res_row_ptr][q] = origin_data[p][q];
             }
+            res_row_ptr++;
+            ///////////////
+            cout << "res_num:" << res_row_ptr;
+            //////////////
+            continue;
+        }
+
+        for (int q = p + 1; q < row_num; q++) {
+            if (origin_data[p][col_ptr] * origin_data[q][col_ptr] < 0) {
+                for (int r = 0; r < col_num; r++) {
+                    res_data[res_row_ptr][r] = origin_data[p][r] +
+                                               origin_data[q][r];
+                }
+            }
+            res_row_ptr++;
+            ///////////////
+            cout << "res_num:" << res_row_ptr;
+            //////////////
         }
     }
+    res_to_origin();
 
     return true;
 }
 
-void print() {
-    for (int p = 0; p < row_num; p++) {
-        for ( int q = 0; q < col_num; q++) {
+void print_res() {
+    for (int p = 0; p < N; p++) {
+        for ( int q = 0; q < N; q++) {
+            cout << res_data[p][q] << " ";
+        }
+        cout << endl;
+    }
+    cout << "-------------------------------------" << endl;
+}
+
+void print_origin() {
+    for (int p = 0; p < N; p++) {
+        for ( int q = 0; q < N; q++) {
             cout << origin_data[p][q] << " ";
         }
         cout << endl;
@@ -57,11 +101,10 @@ void print() {
 }
 
 int main() {
-    while (reduce(origin_data, col_num, row_num)) {
-        print();
-    }
+    print_origin();
+    cout << "fun res:" << reduce() << endl;
+    print_res();
 
-    print();
     return 0;
 }
 
