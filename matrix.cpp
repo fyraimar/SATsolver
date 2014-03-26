@@ -30,15 +30,11 @@ matrix::matrix(int new_col, int new_row) {
   matrix_list = new list<node>;
 }
 
-void matrix::set_value(int data[]) {
-  for (int p = 0; p < row; p++) {
-    for (int q = 0; q < col; q++) {
-      if (data[row*p+q] == 0)
-          continue;
-      node* new_node = new node(p, q, data[row*p+q]);
-      matrix_list->push_back(*new_node);
-    }
-  }
+void matrix::set_value(int pos_x, int pos_y, int new_value) {
+    if (new_value == 0)
+      return;
+    node* new_node = new node(pos_x, pos_y, new_value);
+    matrix_list->push_back(*new_node);
 }
 
 int matrix::get_value(int pos_x, int pos_y) {
@@ -54,8 +50,8 @@ int matrix::get_value(int pos_x, int pos_y) {
 
 void matrix::print() {
   std::cout << "----------------------start\n";
-  for (int p = 0; p < row; p++) {
-    for (int q = 0; q < col; q++) {
+  for (int p = 1; p <= row; p++) {
+    for (int q = 1; q <= col; q++) {
       std::cout << get_value(p, q) << " ";
     }
     std::cout << std::endl;

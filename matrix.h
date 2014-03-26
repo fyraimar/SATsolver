@@ -24,7 +24,7 @@ private:
 
 public:
   matrix(int new_col, int new_row);
-  void set_value(int data[]);
+  void set_value(int pos_x, int pos_y, int new_value);
   void print();
   int get_value(int pos_x, int pos_y);
   bool change_value(int pos_x, int pos_y, int new_value);
