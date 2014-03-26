@@ -1,7 +1,7 @@
 #!/bin/sh
 
-rm reduce.o
-g++ -o reduce.o reduce.cpp
-./reduce.o
+rm test.o
+g++ -o test.o main.cpp matrix.cpp
+./test.o
 
 
