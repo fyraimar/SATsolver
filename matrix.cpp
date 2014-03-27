@@ -48,6 +48,14 @@ int matrix::get_value(int pos_x, int pos_y) {
   return 0;
 }
 
+int matrix::get_col() {
+  return col;
+}
+
+int matrix::get_row() {
+  return row;
+}
+
 void matrix::print() {
   std::cout << "----------------------start\n";
   for (int p = 1; p <= row; p++) {
@@ -79,22 +87,4 @@ bool matrix::change_value(int pos_x, int pos_y, int new_value) {
   }
   return false;
 }
-
-  
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
 
