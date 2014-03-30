@@ -132,6 +132,11 @@ int main() {
   M.delete_zero_col(3);
   M.print();
 
+  matrix T(M);
+  T.delete_zero_col(2);
+  T.print();
+  T.print_list();
+
   return 0;
 }
 

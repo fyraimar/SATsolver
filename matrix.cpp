@@ -9,6 +9,12 @@ node::node(int new_col_num, int new_value, row* new_belonged_row) {
   belonged_row = new_belonged_row;
 }
 
+node::node(const node& other_node, row* new_belonged_row) {
+  this->col_num = other_node.col_num;
+  this->value = other_node.value;
+  this->belonged_row = new_belonged_row;
+}
+
 void node::operator=(int new_value) {
   if (new_value == 0) {
     belonged_row->delete_node(col_num);
@@ -45,10 +51,26 @@ node& node::operator+(node& other_node) {
 /* The implement of class row */
 row::row(int new_row_num) {
   row_num = new_row_num;
+  
+  node_list = new list<node>;
+  node_list->clear();
+
+  parents_list = new list<int>;
+  parents_list-> clear();
+}
+
+row::row(const row& other_row) {
+  this->row_num = other_row.row_num;
+
   node_list = new list<node>;
   
-  node_list->clear();
+  list<node>::iterator iter;
+  for (iter = other_row.node_list->begin(); iter != other_row.node_list->end(); ++iter) {
+    node new_node(*iter,this);
+    this->node_list->push_back(new_node);
+  }
 }
+
 
 int row::get_row_num() {
   return row_num;
@@ -114,6 +136,10 @@ void row::delete_col(int col_num) {
   }
 }
 
+void add_parent(int row_num) {
+}
+  
+
 node& row::operator[](int col_num) {
   list<node>::iterator iter;
   for (iter = node_list->begin(); iter != node_list->end(); ++iter) {
@@ -137,6 +163,18 @@ matrix::matrix(int new_col, int new_row) {
   for (int i = 1; i <= row_counter; i++) {
     row new_row(i);
     row_list->push_back(new_row);
+  }
+}
+
+matrix::matrix(const matrix& other_matrix) {
+  this->col_counter = other_matrix.col_counter;
+  this->row_counter = other_matrix.row_counter;
+  this->row_list = new list<row>;
+
+  list<row>::iterator iter;
+  for (iter = other_matrix.row_list->begin(); iter != other_matrix.row_list->end(); ++iter) {
+    row new_row(*iter);
+    this->row_list->push_back(new_row);
   }
 }
 
@@ -209,11 +247,13 @@ row& matrix::operator[](int row_num) {
   }
 }
 
+//For test.
 void matrix::print_list() {
   list<row>::iterator iter;
   list<node>::iterator iter2;
   for (iter = row_list->begin(); iter != row_list->end(); ++iter) {
-    std::cout << "row #" << iter->get_row_num() << ":\n";
+    std::cout << "row #" << iter->get_row_num() << ": ";
+    std::cout << "row addr: " << &(*iter) << "\n";
     for (iter2 = iter->node_list->begin(); iter2 != iter->node_list->end(); ++iter2) {
       std::cout << iter2->col_num << "|" << iter2->value << " ";
     }
@@ -221,4 +261,3 @@ void matrix::print_list() {
   }
 }
 
-  
