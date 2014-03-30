@@ -3,9 +3,43 @@
 #include <iostream>
 
 /* The implement of class node */
-node::node(int new_col_num, int new_value) {
+node::node(int new_col_num, int new_value, row* new_belonged_row) {
   col_num = new_col_num;
   value = new_value;
+  belonged_row = new_belonged_row;
+}
+
+void node::operator=(int new_value) {
+  if (new_value == 0) {
+    belonged_row->delete_node(col_num);
+  } else {
+    this->value = new_value;
+  }
+}
+
+void node::operator=(node& other_node) {
+  if (other_node.value == 0) {
+    other_node.belonged_row->delete_node(other_node.col_num);
+    this->belonged_row->delete_node(this->col_num);
+    return;
+  }
+
+  this->value = other_node.value;
+
+  if (other_node.col_num == -1)
+    other_node.belonged_row->delete_node(other_node.col_num);
+}
+
+node& node::operator+(node& other_node) {
+  static node tmp_node(-1, this->value + other_node.value, this->belonged_row);
+
+  if (other_node.value == 0)
+    other_node.belonged_row->delete_node(other_node.col_num);
+
+  if (this->value == 0)
+    this->belonged_row->delete_node(this->col_num);
+
+  return tmp_node;
 }
 
 /* The implement of class row */
@@ -21,7 +55,7 @@ int row::get_row_num() {
 }
 
 void row::add_node(int new_col_num, int new_value) {
-  node new_node(new_col_num, new_value);
+  node new_node(new_col_num, new_value, this);
   node_list->push_back(new_node);
 }
 
@@ -61,6 +95,16 @@ void row::change_node_value(int col_num, int new_value) {
   iter->value = new_value;
 }
 
+void row::delete_node(int col_num) {
+  list<node>::iterator iter;
+  for (iter = node_list->begin(); iter != node_list->end(); ++iter) {
+    if (iter->col_num == col_num) {
+      node_list->erase(iter);
+      return;
+    }
+  }
+}
+
 void row::delete_col(int col_num) {
   list<node>::iterator iter;
   for (iter = node_list->begin(); iter != node_list->end(); ++iter) {
@@ -70,11 +114,20 @@ void row::delete_col(int col_num) {
   }
 }
 
+node& row::operator[](int col_num) {
+  list<node>::iterator iter;
+  for (iter = node_list->begin(); iter != node_list->end(); ++iter) {
+    if (iter->col_num == col_num) {
+      return *iter;
+    }
+  }
 
-  
-  
+  node new_node(col_num, 0, this);
+  node_list->push_back(new_node);
+  return *(node_list->rbegin());
+}
 
-/* The implement of class row */
+/* The implement of class matrix */
 matrix::matrix(int new_col, int new_row) {
   col_counter = new_col;
   row_counter = new_row;
@@ -147,3 +200,25 @@ bool matrix::delete_zero_col(int to_del_col) {
   return true;
 }
 
+row& matrix::operator[](int row_num) {
+  list<row>::iterator iter;
+  for (iter = row_list->begin(); iter != row_list->end(); ++iter) {
+    if (iter->get_row_num() == row_num) {
+      return *iter;
+    }
+  }
+}
+
+void matrix::print_list() {
+  list<row>::iterator iter;
+  list<node>::iterator iter2;
+  for (iter = row_list->begin(); iter != row_list->end(); ++iter) {
+    std::cout << "row #" << iter->get_row_num() << ":\n";
+    for (iter2 = iter->node_list->begin(); iter2 != iter->node_list->end(); ++iter2) {
+      std::cout << iter2->col_num << "|" << iter2->value << " ";
+    }
+    std::cout << std::endl;
+  }
+}
+
+  

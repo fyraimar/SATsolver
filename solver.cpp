@@ -118,8 +118,16 @@ int main() {
   M.change_value(3, 3, 7);
   M.print();
 
-  M.change_value(1, 1, 0);
+  M[1][1] = 0;
   M.print();
+
+  M[2][2] =  M[2][4] + M[1][3];
+  M.print();
+
+  M[1][1] = 3;
+  M.print();
+
+  M.print_list();
 
   M.delete_zero_col(3);
   M.print();

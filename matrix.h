@@ -2,26 +2,38 @@
 
 using std::list;
 
+class row;
+
 class node {
 public:
   int col_num;
   int value;
+  row* belonged_row;
 
-  node(int new_col_num, int new_value);
+  node(int new_col_num, int new_value, row* belonged_row);
+  void operator=(int new_value);
+  void operator=(node& other_node);
+  node& operator+(node& other_node);
 };
 
 class row {
 private:
   int row_num;
-  list<node>* node_list;
+  list<int>* parents_row;
 
 public:
+  //TODO(fyraimar) Move to private.
+  list<node>* node_list;
   row(int new_row_num);
   int get_row_num();
   void add_node(int new_col_num, int new_value);
   int get_node_value(int col_num);
   void change_node_value(int col_num, int new_value);
   void delete_col(int col_num);
+  void delete_node(int col_num);
+  void add_parent(int row_num);
+
+  node& operator[](int col_num);
 };
  
 
@@ -37,10 +49,13 @@ public:
   void add_new_node(int new_row_num, int new_col_num, int new_value);
 
   void print();
+  void print_list();
   int get_col();
   int get_row();
   int get_value(int row_num, int col_num);
   void change_value(int row_num, int col_num, int new_value);
   bool delete_zero_col(int col_num);
+
+  row& operator[](int row_num);
 };
 
