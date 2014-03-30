@@ -2,64 +2,125 @@
 
 #include <iostream>
 
-node::node(int new_x, int new_y, int new_value) {
-  x = new_x;
-  y = new_y;
+/* The implement of class node */
+node::node(int new_col_num, int new_value) {
+  col_num = new_col_num;
   value = new_value;
 }
 
-int node::get_x() {
-  return x;
+/* The implement of class row */
+row::row(int new_row_num) {
+  row_num = new_row_num;
+  node_list = new list<node>;
+  
+  node_list->clear();
 }
 
-int node::get_y() {
-  return y;
+int row::get_row_num() {
+  return row_num;
 }
 
-int node::get_value() {
-  return value;
+void row::add_node(int new_col_num, int new_value) {
+  node new_node(new_col_num, new_value);
+  node_list->push_back(new_node);
 }
 
-bool node::change_value(int new_value) {
-  value = new_value;
-}
-
-matrix::matrix(int new_col, int new_row) {
-  col = new_col;
-  row = new_row;
-  matrix_list = new list<node>;
-}
-
-void matrix::set_value(int pos_x, int pos_y, int new_value) {
-    if (new_value == 0)
-      return;
-    node* new_node = new node(pos_x, pos_y, new_value);
-    matrix_list->push_back(*new_node);
-}
-
-int matrix::get_value(int pos_x, int pos_y) {
+int row::get_node_value(int col_num) { 
   list<node>::iterator iter;
-  for (iter = matrix_list->begin(); iter != matrix_list->end(); ++iter) {
-      if (iter->get_x() == pos_x && iter->get_y() == pos_y) {
-          return iter->get_value();
-      }
+  for (iter = node_list->begin(); iter != node_list->end(); ++iter) {
+    if (iter->col_num == col_num) {
+      return iter->value;
+    }
+  }
+  return 0;
+}
+ 
+void row::change_node_value(int col_num, int new_value) {
+  int old_value = 0;
+  list<node>::iterator iter;
+  for (iter = node_list->begin(); iter != node_list->end(); ++iter) {
+    if (iter->col_num == col_num) {
+      old_value = iter->value;
+      break;
+    }
   }
 
-  return 0;
+  if (old_value == 0 && new_value == 0)
+    return;
+
+  if (old_value == 0) {
+    add_node(col_num, new_value);
+    return;
+  }
+
+  if (new_value == 0) {
+    node_list->erase(iter);
+    return;
+  }
+
+  iter->value = new_value;
+}
+
+void row::delete_col(int col_num) {
+  list<node>::iterator iter;
+  for (iter = node_list->begin(); iter != node_list->end(); ++iter) {
+    if (iter->col_num > col_num) {
+      iter->col_num--;
+    }
+  }
+}
+
+
+  
+  
+
+/* The implement of class row */
+matrix::matrix(int new_col, int new_row) {
+  col_counter = new_col;
+  row_counter = new_row;
+  row_list = new list<row>;
+
+  row_list->clear();
+  for (int i = 1; i <= row_counter; i++) {
+    row new_row(i);
+    row_list->push_back(new_row);
+  }
+}
+
+void matrix::add_new_node(int new_row_num, int new_col_num, int new_value) {
+  if (new_value == 0)
+    return;
+
+  list<row>::iterator iter;
+  for (iter = row_list->begin(); iter != row_list->end(); ++iter) {
+    if (iter->get_row_num() == new_row_num) {
+      iter->add_node(new_col_num, new_value);
+      return;
+    }
+  }
 }
 
 int matrix::get_col() {
-  return col;
+  return col_counter;
 }
 
 int matrix::get_row() {
-  return row;
+  return row_counter;
+}
+
+int matrix::get_value(int row_num, int col_num) {
+  list<row>::iterator iter;
+  for (iter = row_list->begin(); iter != row_list->end(); ++iter) {
+    if (iter->get_row_num() == row_num) {
+      return iter->get_node_value(col_num);
+    }
+  }
 }
 
 void matrix::print() {
   std::cout << "----------------------start\n";
-  for (int p = 1; p <= row; p++) {
-    for (int q = 1; q <= col; q++) {
+  for (int p = 1; p <= row_counter; p++) {
+    for (int q = 1; q <= col_counter; q++) {
       std::cout << get_value(p, q) << " ";
     }
     std::cout << std::endl;
@@ -67,24 +128,22 @@ void matrix::print() {
   std::cout << "------------------------end\n";
 }
 
-bool matrix::change_value(int pos_x, int pos_y, int new_value) {
-  if (get_value(pos_x, pos_y) == 0) {
-    if (new_value != 0) {
-      node* new_node = new node(pos_x, pos_y, new_value);
-      matrix_list->push_back(*new_node);
+void matrix::change_value(int row_num, int col_num, int new_value) {
+  list<row>::iterator iter;
+  for (iter = row_list->begin(); iter != row_list->end(); ++iter) {
+    if (iter->get_row_num() == row_num) {
+      iter->change_node_value(col_num, new_value);
+      return;
     }
-    return true;
   }
+}
 
-  list<node>::iterator iter;
-  for (iter = matrix_list->begin(); iter != matrix_list->end(); ++iter) {
-    if (iter->get_x() == pos_x && iter->get_y() == pos_y) {
-      if (new_value == 0)
-        matrix_list->erase(iter);
-      else iter->change_value(new_value);
-        return true;
-    }
+bool matrix::delete_zero_col(int to_del_col) {
+  list<row>::iterator iter;
+  for (iter = row_list->begin(); iter != row_list->end(); ++iter) {
+    iter->delete_col(to_del_col);
   }
-  return false;
+  col_counter--;
+  return true;
 }
 

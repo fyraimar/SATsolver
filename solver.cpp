@@ -108,11 +108,20 @@ int main() {
     do {
       in >> tmp;
     if (tmp > 0)
-      M.set_value(i, tmp, 1);
+      M.add_new_node(i, tmp, 1);
     if (tmp < 0) 
-      M.set_value(i, -tmp, -1);
+      M.add_new_node(i, -tmp, -1);
     } while (tmp != 0);
   }
+  M.print();
+
+  M.change_value(3, 3, 7);
+  M.print();
+
+  M.change_value(1, 1, 0);
+  M.print();
+
+  M.delete_zero_col(3);
   M.print();
 
   return 0;

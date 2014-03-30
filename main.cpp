@@ -14,6 +14,9 @@ int main() {
 
   M->change_value(1, 0, 0);
   M->print();
+
+  M->delete_zero_col(4);
+  M->print();
   return 0;
 }
 
