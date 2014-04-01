@@ -29,10 +29,12 @@ void solver::is_reduce(int *isz, int *dr, int *is) {
           flag = 1;
           continue;
         }
-        if (temp ^ rij >= 0) {
+        if (temp * rij >= 0) {
           flag = 1;
           continue;
         } else {
+          std::cout << "temp: " << temp << std::endl;
+          std::cout << "rij: " << rij << std::endl;
           flag = 0;
           break;
         }
@@ -41,6 +43,7 @@ void solver::is_reduce(int *isz, int *dr, int *is) {
 
     if (flag == 0) {
       *dr = j;
+      std::cout << "add col to red: " << *dr << std::endl;
     }
     if (iz == 0 && flag == 1) {
       *is = 1;
@@ -51,6 +54,78 @@ void solver::is_reduce(int *isz, int *dr, int *is) {
       *isz = 0;
     }
   }
+}
+
+void solver::reduce() {
+  int m = m_ptr->get_row();
+  int n = m_ptr->get_col();
+
+  int izr, zr, isz, dr, is;
+  is_zero_row(&izr, &zr);
+  is_reduce(&isz, &dr, &is);
+
+  if (is == 1 && isz == 1) {
+    m_ptr->print();
+    return;
+  }
+
+
+  int add_pos = m + 1;
+  for (int i = 1; i <= m ; i++) {
+    if (m_ptr->get_value(i, dr) > 0) {
+      for (int j = 1; j <= m; j++) {
+        if (m_ptr->get_value(j, dr) < 0) {
+
+          m_ptr->add_new_row(add_pos);
+          int ridr = m_ptr->get_value(i, dr);
+          int rjdr = -m_ptr->get_value(j, dr);
+
+          if (ridr > rjdr) {
+            for (int k = 1; k <= n; k++) {
+              int rik = m_ptr->get_value(i, k);
+              int rjk = m_ptr->get_value(j, k);
+              m_ptr->add_new_node(add_pos, k, rjk * ridr / rjdr + rik);
+            }
+          } else if (ridr < rjdr) {
+            for (int k = 1; k <= n; k++) {
+              int rik = m_ptr->get_value(i, k);
+              int rjk = m_ptr->get_value(j, k);
+              m_ptr->add_new_node(add_pos, k, rik * rjdr / ridr + rjk);
+            }
+          } else {
+            for (int k = 1; k <= n; k++) {
+              int rik = m_ptr->get_value(i, k);
+              int rjk = m_ptr->get_value(j, k);
+              m_ptr->add_new_node(add_pos, k, rjk + rik);
+            }
+          }
+
+          add_pos++;
+        }
+      }
+
+      m_ptr->del_row(i);
+
+      m--;
+      add_pos--;
+    }
+  }
+
+  std::cout << "row num: " << m << std::endl;
+  std::cout << "add_pos - 1: " << add_pos - 1 << std::endl;
+  m_ptr->print_list();
+
+  for (int i = 1; i <= m; i++) {
+    if (m_ptr->get_value(i, dr) < 0) {
+      m_ptr->del_row(i);
+      add_pos--;
+      i--;
+    }
+  }
+
+  m_ptr->row_counter = add_pos - 1;
+  m_ptr->print();
+  m_ptr->print_list();
 }
 
 void solver::is_zero_row(int *izr, int *zr) {

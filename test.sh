@@ -1,6 +1,6 @@
 #!/bin/sh
 
 rm test.o
-g++ -o test.o solver.cpp matrix.cpp main.cpp
+g++ -o test.o matrix.cpp solver.cpp main.cpp
 ./test.o
 

@@ -11,6 +11,7 @@ public:
   solver(matrix &new_M);
   void is_reduce(int *isz, int *dr, int *is);
   void is_zero_row(int *izr, int *zr);
+  void reduce();
 
   //for test
   void print();

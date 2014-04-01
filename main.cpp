@@ -21,13 +21,14 @@ int main() {
       M.add_new_node(i, -tmp, -1);
     } while (tmp != 0);
   }
-  M.print();
-  M.print_list();
 
   solver S(M);
   S.print();
   S.print_list();
 
+  S.reduce();
+
+  /*
   int izr, zr, isz, dr, is;
   S.is_zero_row(&izr, &zr);
   S.is_reduce(&isz, &dr, &is);
@@ -44,7 +45,6 @@ int main() {
   else
     printf("矩阵中不存在符号相同的列，且存在符号相异的列，不能判断谁否能推导出0，下一步要约减的列是第%d列\n",dr);
 
-  /*
   M.change_value(3, 3, 7);
   M.print();
 

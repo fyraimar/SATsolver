@@ -194,6 +194,11 @@ void matrix::add_new_node(int new_row_num, int new_col_num, int new_value) {
   }
 }
 
+void matrix::add_new_row(int new_row_num) {
+  row new_row(new_row_num);
+  this->row_list->push_back(new_row);
+}
+
 int matrix::get_col() {
   return col_counter;
 }
@@ -232,7 +237,7 @@ void matrix::change_value(int row_num, int col_num, int new_value) {
   }
 }
 
-bool matrix::delete_zero_col(int to_del_col) {
+bool matrix::del_zero_col(int to_del_col) {
   list<row>::iterator iter;
   for (iter = row_list->begin(); iter != row_list->end(); ++iter) {
     iter->delete_col(to_del_col);
@@ -240,6 +245,20 @@ bool matrix::delete_zero_col(int to_del_col) {
   col_counter--;
   return true;
 }
+
+void matrix::del_row(int row_num) {
+  list<row>::iterator iter;
+  for (iter = row_list->begin(); iter != row_list->end(); ++iter) {
+    if (iter->get_row_num() == row_num) {
+      iter = row_list->erase(iter);
+    }
+    if (iter->get_row_num() > row_num) {
+      iter->row_num--;
+    }
+  }
+  row_counter--;
+}
+
 
 row& matrix::operator[](int row_num) {
   list<row>::iterator iter;

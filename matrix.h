@@ -25,11 +25,11 @@ public:
 
 class row {
 private:
-  int row_num;
   set<int>* parents_list;
 
 public:
   list<node>* node_list;
+  int row_num;
 
   row(int new_row_num);
   row(const row& other_row);
@@ -52,10 +52,11 @@ public:
 class matrix {
 private:
   list<row>* row_list;
+
+public:
   int col_counter;
   int row_counter;
 
-public:
   matrix(int new_col, int new_row);
   matrix(const matrix& other_matrix);
 
@@ -64,7 +65,8 @@ public:
 
   int get_col();
   int get_row();
-  bool delete_zero_col(int col_num);
+  bool del_zero_col(int col_num);
+  void del_row(int row_num);
 
   int get_value(int row_num, int col_num);
   void change_value(int row_num, int col_num, int new_value);
