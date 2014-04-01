@@ -55,7 +55,7 @@ row::row(int new_row_num) {
   node_list = new list<node>;
   node_list->clear();
 
-  parents_list = new list<int>;
+  parents_list = new set<int>;
   parents_list-> clear();
 }
 
@@ -63,6 +63,9 @@ row::row(const row& other_row) {
   this->row_num = other_row.row_num;
 
   node_list = new list<node>;
+
+  parents_list = new set<int>;
+  parents_list-> clear();
   
   list<node>::iterator iter;
   for (iter = other_row.node_list->begin(); iter != other_row.node_list->end(); ++iter) {

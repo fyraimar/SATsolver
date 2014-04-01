@@ -1,6 +1,11 @@
+#ifndef _MATRIX_H_
+#define _MATRIX_H_
+
 #include <list>
+#include <set>
 
 using std::list;
+using std::set;
 
 class row;
 
@@ -21,10 +26,9 @@ public:
 class row {
 private:
   int row_num;
-  list<int>* parents_list;
+  set<int>* parents_list;
 
 public:
-  //TODO(fyraimar) Move to private.
   list<node>* node_list;
 
   row(int new_row_num);
@@ -71,3 +75,4 @@ public:
   row& operator[](int row_num);
 };
 
+#endif
