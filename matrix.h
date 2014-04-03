@@ -25,9 +25,9 @@ public:
 
 class row {
 private:
-  set<int>* parents_list;
 
 public:
+  set<int>* parents_list;
   list<node>* node_list;
   int row_num;
 
@@ -46,6 +46,9 @@ public:
   void add_parent(int row_num);
 
   node& operator[](int col_num);
+
+  //for test
+  void print_parents();
 };
  
 

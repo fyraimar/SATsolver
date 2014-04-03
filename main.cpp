@@ -21,6 +21,7 @@ int main() {
       M.add_new_node(i, -tmp, -1);
     } while (tmp != 0);
   }
+  M.print();
 
   solver S(M);
   S.print();

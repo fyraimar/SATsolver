@@ -33,8 +33,6 @@ void solver::is_reduce(int *isz, int *dr, int *is) {
           flag = 1;
           continue;
         } else {
-          std::cout << "temp: " << temp << std::endl;
-          std::cout << "rij: " << rij << std::endl;
           flag = 0;
           break;
         }
@@ -43,7 +41,6 @@ void solver::is_reduce(int *isz, int *dr, int *is) {
 
     if (flag == 0) {
       *dr = j;
-      std::cout << "add col to red: " << *dr << std::endl;
     }
     if (iz == 0 && flag == 1) {
       *is = 1;
@@ -69,7 +66,6 @@ void solver::reduce() {
     return;
   }
 
-
   int add_pos = m + 1;
   for (int i = 1; i <= m ; i++) {
     if (m_ptr->get_value(i, dr) > 0) {
@@ -77,6 +73,14 @@ void solver::reduce() {
         if (m_ptr->get_value(j, dr) < 0) {
 
           m_ptr->add_new_row(add_pos);
+          std::set<int>::iterator iter;
+          for (iter = (*m_ptr)[j].parents_list->begin(); iter != (*m_ptr)[j].parents_list->end(); iter++) {
+            (*m_ptr)[add_pos].add_parent(*iter);
+          }
+          for (iter = (*m_ptr)[i].parents_list->begin(); iter != (*m_ptr)[i].parents_list->end(); iter++) {
+            (*m_ptr)[add_pos].add_parent(*iter);
+          }
+
           int ridr = m_ptr->get_value(i, dr);
           int rjdr = -m_ptr->get_value(j, dr);
 
@@ -111,7 +115,6 @@ void solver::reduce() {
     }
   }
   add_pos--;
-  std::cout << "row num: " << add_pos << std::endl;
   m_ptr->row_counter = add_pos ;
   m_ptr->print();
   for (int i = 1; i <= add_pos; i++) {
@@ -121,7 +124,6 @@ void solver::reduce() {
       i--;
     }
   }
-  std::cout << "row num: " << add_pos << std::endl;
   m_ptr->row_counter = add_pos;
 //m_ptr->del_col(dr);
 //m_ptr->row_counter--;

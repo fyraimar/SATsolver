@@ -65,7 +65,7 @@ row::row(const row& other_row) {
   node_list = new list<node>;
 
   parents_list = new set<int>;
-  parents_list-> clear();
+  parents_list = other_row.parents_list;
   
   list<node>::iterator iter;
   for (iter = other_row.node_list->begin(); iter != other_row.node_list->end(); ++iter) {
@@ -139,7 +139,8 @@ void row::delete_col(int col_num) {
   }
 }
 
-void add_parent(int row_num) {
+void row::add_parent(int row_num) {
+  parents_list->insert(row_num);
 }
   
 
@@ -156,6 +157,15 @@ node& row::operator[](int col_num) {
   return *(node_list->rbegin());
 }
 
+void row::print_parents() {
+  std::set<int>::iterator iter;
+  std::cout << row_num << " parents: ";
+  for (iter = parents_list->begin(); iter != parents_list->end(); iter++) {
+    std::cout << *iter << " ";
+  }
+  std::cout << "\n";
+}
+
 /* The implement of class matrix */
 matrix::matrix(int new_col, int new_row) {
   col_counter = new_col;
@@ -165,6 +175,7 @@ matrix::matrix(int new_col, int new_row) {
   row_list->clear();
   for (int i = 1; i <= row_counter; i++) {
     row new_row(i);
+    new_row.add_parent(i);
     row_list->push_back(new_row);
   }
 }
@@ -197,6 +208,7 @@ void matrix::add_new_node(int new_row_num, int new_col_num, int new_value) {
 void matrix::add_new_row(int new_row_num) {
   row new_row(new_row_num);
   this->row_list->push_back(new_row);
+  (*this)[new_row_num].print_parents();
 }
 
 int matrix::get_col() {
@@ -222,6 +234,7 @@ void matrix::print() {
     for (int q = 1; q <= col_counter; q++) {
       std::cout << get_value(p, q) << " ";
     }
+    (*this)[p].print_parents();
     std::cout << std::endl;
   }
   std::cout << "------------------------end\n";
