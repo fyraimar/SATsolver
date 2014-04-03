@@ -131,6 +131,27 @@ void solver::reduce() {
 //  m_ptr->print_list();
 }
 
+void solver::find_a() {
+  int m = m_ptr->get_row();
+  int n = m_ptr->get_col();
+
+  int iz = 0;
+
+  matrix B(*m_ptr);
+  for (;;) {
+    matrix R(*m_ptr);
+
+    for (int k = n - 1; k >= 0; k--) {
+      if (1);
+
+      for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+          }
+      }
+    }
+  }
+}
+
 void solver::is_zero_row(int *izr, int *zr) {
   int m = m_ptr->get_row();
   int n = m_ptr->get_col();
