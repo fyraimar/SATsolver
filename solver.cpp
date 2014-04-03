@@ -104,28 +104,29 @@ void solver::reduce() {
         }
       }
 
-      m_ptr->del_row(i);
+   //   m_ptr->del_row(i);
 
-      m--;
-      add_pos--;
+   //   m--;
+    //  add_pos--;
     }
   }
-
-  std::cout << "row num: " << m << std::endl;
-  std::cout << "add_pos - 1: " << add_pos - 1 << std::endl;
-  m_ptr->print_list();
-
-  for (int i = 1; i <= m; i++) {
-    if (m_ptr->get_value(i, dr) < 0) {
+  add_pos--;
+  std::cout << "row num: " << add_pos << std::endl;
+  m_ptr->row_counter = add_pos ;
+  m_ptr->print();
+  for (int i = 1; i <= add_pos; i++) {
+    if (m_ptr->get_value(i, dr) != 0) {
       m_ptr->del_row(i);
       add_pos--;
       i--;
     }
   }
-
-  m_ptr->row_counter = add_pos - 1;
+  std::cout << "row num: " << add_pos << std::endl;
+  m_ptr->row_counter = add_pos;
+//m_ptr->del_col(dr);
+//m_ptr->row_counter--;
   m_ptr->print();
-  m_ptr->print_list();
+//  m_ptr->print_list();
 }
 
 void solver::is_zero_row(int *izr, int *zr) {
